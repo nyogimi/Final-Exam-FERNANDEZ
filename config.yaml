@@ -1,0 +1,86 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Installing Updates and Upgrade (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Installing Updates and Upgrade (CentOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+- hosts: workstations
+  become: true
+  tasks:
+
+  - name: install apache and php for Ubuntu servers
+    apt:
+      name:
+        - apache2
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache and php for CentOS servers
+    dnf:
+      name:
+        - httpd
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Install Nagios (Ubuntu)
+    apt:
+      name:
+        - nagios4
+        - nagios-plugins
+        - nagios-nrpe-server
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Nagios (CentOS)
+    yum:
+      name:
+        - nagios
+        - nagios-plugins
+    when: ansible_distribution == "CentOS"
+
+- hosts: compute
+  become: true
+  tasks:
+
+  - name: install apache and php for Ubuntu servers
+    apt:
+      name:
+        - apache2
+      state: latest
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install apache and php for CentOS servers
+    dnf:
+      name:
+        - httpd
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Install Nagios (Ubuntu)
+    apt:
+      name:
+        - nagios4
+        - nagios-plugins
+        - nagios-nrpe-server
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Nagios (CentOS)
+    yum:
+      name:
+        - nagios
+        - nagios-plugins
+    when: ansible_distribution == "CentOS"
